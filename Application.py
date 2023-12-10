@@ -82,7 +82,32 @@ class ResourceManager:
         for resource in self.resources:
             if str(getattr(resource, "id")) == unique_characteristic:
                 for key, value in new_attributes.items():
-                    setattr(resource,key,value)    
+                    setattr(resource,key,value)
+
+    #Delete Watercraft details
+    def delete_resource(self,unique_characteristic):
+        original_count = len(self.resources)
+
+        #create a new list
+        updated_resources = []
+        deleted_item_found = False
+
+        for resource in self.resources:
+            if str(getattr(resource, "id")) == unique_characteristic:
+                deleted_item_found = True
+            else:
+                updated_resources.append(resource)
+        
+        #update the resources list 
+
+        self.resources = updated_resources
+
+        new_count = len(self.resources)
+
+        if deleted_item_found:
+            print("Watercraft with ID {} has been successfully deleted".format(unique_characteristic))
+        else:
+            print("No Watercraft Resource has been found with ID {}".format(unique_characteristic))    
 
 
 #UI Interface
