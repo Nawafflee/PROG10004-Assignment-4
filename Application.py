@@ -77,6 +77,13 @@ class ResourceManager:
         # Returns the list of matching resources
         return result
 
+    # Edit Watercraft details
+    def edit_resource(self,unique_characteristic,new_attributes):
+        for resource in self.resources:
+            if str(getattr(resource, "id")) == unique_characteristic:
+                for key, value in new_attributes.items():
+                    setattr(resource,key,value)    
+
 
 #UI Interface
 class UserInteraction:
