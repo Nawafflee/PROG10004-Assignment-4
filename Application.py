@@ -35,11 +35,21 @@ class DataPersistence:
     pass
 
 
-#Resource Managment 
+#Resource Management 
 class ResourceManager:
+
     def __init__(self):
         self.resources = []
 
+    # Creates a new Watercraft item and add it to the resources list
+    def create_resource(self,key_attributes):
+        resource_creation = Resource(key_attributes["id"],
+                                     key_attributes["name"],
+                                     key_attributes["manufacturer"],
+                                     key_attributes["country"],
+                                     key_attributes["price"])
+
+        self.resources.append(resource_creation)
 
 
 
