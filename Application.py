@@ -1,5 +1,6 @@
 
-
+import csv 
+import os
 """
 https://github.com/Nawafflee/PROG10004-Assignment-4
 """
@@ -32,7 +33,27 @@ print(resource1.getDictionary())
 
 #Data Persistence
 class DataPersistence:
-    pass
+    #Loads the data from a CSV file into a list of dictionaries
+    @staticmethod
+    def load_data():
+        data = []
+        if os.path.exists("Watercraft_Data.csv"):
+            with open("Watercraft_Data.csv","r") as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    craft_data = {key : row[key] for key in row}
+                    data.append(craft_data)
+        return data
+    
+    #Saves the data to a CSV file
+    @staticmethod
+    def save_data(data):
+        with open("Watercraft_Data.csv","w", newline="") as file:
+            fields = ["id","name","manufacturer","country","price"]
+            writer = csv.DictWriter(file, fieldnames = fields)
+            writer.writeheader()
+            for item in data:
+                writer.writerow(item.getDictionary()) #Converts Watercraft to dictionary
 
 
 #Resource Management 
