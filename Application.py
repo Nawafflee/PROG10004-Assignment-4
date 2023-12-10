@@ -51,6 +51,31 @@ class ResourceManager:
 
         self.resources.append(resource_creation)
 
+    def search_resource(self, key_attribute, non_key_attribute):
+        # Convert the non_key_attribute to lowercase and remove any leading/trailing whitespaces
+        non_key_attribute = str(non_key_attribute).strip().lower()
+
+        # Initialize an empty list to store the matching resources
+        result = []
+
+        # Iterates through each resource in the list
+        for resource in self.resources:
+            # Gets the value of the specified key_attribute for the current resource
+            resource_value = getattr(resource, key_attribute, None)
+
+            # Checks if the resource_value matches the non_key_attribute (case-insensitive)
+            if resource_value is not None and str(resource_value).strip().lower() == non_key_attribute:
+                # If there's a match, add the resource details to the result list
+                result.append({
+                    "id" : resource.id,
+                    "name" : resource.name,
+                    "manufacturer" : resource.manufacturer,
+                    "country" : resource.country,
+                    "price" : resource.price
+                })
+
+        # Returns the list of matching resources
+        return result
 
 
 #UI Interface
