@@ -1,6 +1,7 @@
 
 import csv 
 import os
+
 """
 https://github.com/Nawafflee/PROG10004-Assignment-4
 """
@@ -119,8 +120,7 @@ class ResourceManager:
             else:
                 updated_resources.append(resource)
         
-        #update the resources list 
-
+        #updates the resources list 
         self.resources = updated_resources
 
         new_count = len(self.resources)
@@ -133,4 +133,94 @@ class ResourceManager:
 
 #UI Interface
 class UserInteraction:
-    pass
+    #Display the Menu Options
+    @staticmethod
+    def show_menu():
+
+        print("\tWelcome to the Watercraft Inventory CRUD System: ")
+        print("What would you like to do?")
+        print("1. Add Watercraft to Inventory")
+        print("2. Search for a Watercraft in Inventory")
+        print("3. Edit Watercraft in Inventory")
+        print("4. Delete Watercraft from inventory")
+        print("5. Exit CRUD System")
+
+    #Obtain User Input
+    @staticmethod
+    def user_choice():
+        try:
+            choice = int(input("Please Enter your choice from the Main Menu: "))
+            return choice
+        except ValueError:
+            print("Invalid Input. Please Enter an integer number")
+
+    #Get an attribute for a new watercraft 
+    @staticmethod
+    def get_resource_attributes():
+
+        id = input("Enter ID: ")
+        name = input("Enter Watercraft Name: ")
+        manufacturer = input("Enter Watercraft Manufacturer: ")
+        country = input("Enter Country of Manufacture: ")
+        price = input("Enter Price in $CAD MSRP: ")
+
+        return {"id" : id,
+                "name" : name,
+                "manufacturer" : manufacturer,
+                "country" : country,
+                "price": price}
+
+    #Displays the list containing the watercraft details
+    @staticmethod
+    def display_resources(resources):
+        if not resources:
+            print("No matching Watercraft can be found!")
+        for resource in resources:
+            print("id : {} | name : {} | manufacturer : {} | country : {} | price : {}".format(resource["id"],
+                                                                                            resource["name"],
+                                                                                            resource["manufacturer"],
+                                                                                            resource["country"],
+                                                                                            resource["price"]))
+
+#Object Instances Intialization
+ui = UserInteraction()
+watercraft_resource_manager = ResourceManager()
+data_persistance = DataPersistence()
+
+#Load existing Data
+existing_data = data_persistance.load_data()
+watercraft_resource_manager.resources = [Resource(**item) for item in existing_data]
+
+#User interaction loop
+while True:
+    ui.show_menu()
+    choice = ui.user_choice()
+
+    if choice == 1:
+        attributes = ui.get_resource_attributes()
+        watercraft_resource_manager.create_resource(attributes)
+        print("Successfully added a New Watercraft to Inventory!")
+
+    elif choice == 2:
+        key_attribute = input("Enter Key Attribute (e.g, id): ")
+        non_key_attribute = input("Enter {} value to search: ".format(key_attribute))
+        result = watercraft_resource_manager.search_resource(key_attribute,non_key_attribute)
+        ui.display_resources(result)
+    
+    elif choice == 3:
+        unique_characteristic = input("Enter Unique Value (e.g, ID Value) to update: ")
+        new_attributes = ui.get_resource_attributes()
+        watercraft_resource_manager.edit_resource(unique_characteristic,new_attributes)
+    
+    elif choice == 4:
+        unique_characteristic = input("Enter Unique Value (e.g., ID Value) to delete: ")
+        watercraft_resource_manager.delete_resource(unique_characteristic)
+
+    elif choice == 5:
+        break #exits the UI 
+
+#Data Saving Before Exiting 
+data_persistance.save_data(watercraft_resource_manager.resources)
+print("Terminated Gracefully. Now Exiting Program...")
+
+
